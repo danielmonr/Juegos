@@ -64,7 +64,7 @@ int main(int argc, const char * argv[]) {
         printf("Conectado a %s:%d \n",
                inet_ntoa(direccion.sin_addr),
                ntohs(direccion.sin_port));
-        
+		
         // Leer de teclado y escribir en socket
         while (leidos = read(fileno(stdin), &buffer, sizeof(char))) {
 			printf("Escogiste %c\n", buffer);
