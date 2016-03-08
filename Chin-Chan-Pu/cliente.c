@@ -37,7 +37,8 @@ int main(int argc, const char * argv[]) {
     struct sockaddr_in direccion;
     char buffer, res;
 	int gano;
-    
+    int cont = 0;
+	int cont2 = 0;
     
     int leidos, escritos;
     
@@ -66,7 +67,9 @@ int main(int argc, const char * argv[]) {
                ntohs(direccion.sin_port));
 		
         // Leer de teclado y escribir en socket
-        while (leidos = read(fileno(stdin), &buffer, sizeof(char))) {
+        while (1){
+			printf("\n\n Ganados:%d, Perdidos:%d\n", cont, cont2);
+			leidos = read(fileno(stdin), &buffer, sizeof(char));
 			printf("Escogiste %c\n", buffer);
 			read(cliente, &res, sizeof(char));
 			printf("Escogio %c\n", res);
@@ -77,9 +80,12 @@ int main(int argc, const char * argv[]) {
 
 			if(gano == 1){
 				printf("Perdiste :C\n");
+				cont2++;
 			}
-			else if(gano == 0)
+			else if(gano == 0){
 				printf("Ganaste! :D\n");
+				cont++;
+			}
 			else
 				printf("EMPATE :|\n");
         }

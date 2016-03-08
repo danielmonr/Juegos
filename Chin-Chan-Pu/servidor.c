@@ -62,7 +62,9 @@ int main(int argc, const char * argv[]) {
                ntohs(direccion.sin_port));
         
         // Leer de socket y escribir en pantalla
-        while (leidos = read(fileno(stdin), &respuesta, sizeof(char))) {
+        while (1){
+			printf("\n\n Ganados:%d Perdidos:%d\n", cont, cont2);
+			read(fileno(stdin), &respuesta, sizeof(char));
             printf("Respuesta: %c\n", respuesta);
 			write(cliente, &respuesta, sizeof(char));
             leidos = read(cliente, &adversario, sizeof(char));
@@ -80,7 +82,6 @@ int main(int argc, const char * argv[]) {
 				printf("EMPATE :|\n");
 			}
 			write(cliente, &gano, sizeof(int));
-
         }     
     }
     
