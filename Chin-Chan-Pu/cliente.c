@@ -93,4 +93,5 @@ int main(int argc, const char * argv[]) {
 
 void cerrar(int sig){
 	close(cliente);
+	exit(0);
 }

@@ -95,6 +95,7 @@ int main(int argc, const char * argv[]) {
 void cerrar(int sig){
 	close(servidor);
 	close(cliente);
+	exit(0);
 }
 
 int jugar(char yo, char tu){
