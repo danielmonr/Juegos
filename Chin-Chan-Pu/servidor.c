@@ -75,7 +75,7 @@ int main(int argc, const char * argv[]) {
 				cont++;
 			}
 			else if(gano == 0){
-				cont--;
+				cont2++;
 				printf("Perdiste :C\n");
 			}
 			else{
