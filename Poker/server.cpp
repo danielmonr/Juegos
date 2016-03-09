@@ -24,7 +24,13 @@
 #include    <netinet/in.h>
 #include    <arpa/inet.h>
 
+#define TCP_PORT 8001
+// numero de conecciones posibles
+#define N 5
+
 using namespace std;
+
+int servidor, cliente;
 
 /* ===  FUNCTION MAIN ===================================================================*/
 int main ( int argc, char *argv[] ){
@@ -37,21 +43,44 @@ int main ( int argc, char *argv[] ){
 		cout << "Numero de argumentos no válidos.\nAbortando\n";
 	}
 
+	pid_t* pid = (pid_t) malloc (N * sizeof(pid_t));
+	int cont = 0;
+
 	/*  Mensajes de entrada */
 	cout << "############## Bienvenido a POKER ITC. #############" << endl;
 	cout << "######### Desarrollado por: Daniel Monzalvo ########" << endl;
 
 	/*  Inicio del servidor */
-
 	struct sockaddr_in direccion;
 	char buffer[1000];
 
-	int servidor, cliente;
+	//crear el servidor
+	servidor = socket(PF_INET, SOCK_STREAM, 0);
 
-	pid_t pid;
+	//establecer coneccion con el servidor
+	direccion.sin_port = htons(TCP_PORT);
+	direccion.sin_family = AF_INET;
+	inet_aton(argv[1], &direccion.sin_addr);
+	bind(servidor, (struct sockaddr *) &direccion, sizeof(direccion));
 
+	// escuchar clientes
+	listen(servidor, N);
 
+	socklen_t tam = sizeof(direccion);
+	while(1){
+		cliente = accept(servidor, (struct sockaddr *) &direccion, &tamano);
+		cout << "Aceptando conexiones en "<< inet_ntoa(direccion.sin_addr) << ":" << ntohs(direccion.sin_port) << endl;
+		*(pid+(cont++)) = fork();
+		if(paid == 0) break;	
+	}
+	if(*(pid+cont) == 0){
+		close(servidor);
+		close(cliente);
+	}
+	else if(*(pid+cont)== 0){
 
+	}
 
+	free(pid);
 	return EXIT_SUCCESS;
 }				/* ----------  end of function main  ---------- */
