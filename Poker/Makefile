@@ -2,7 +2,7 @@ ALL: servidor cliente
 .PHONY=clean prueba
 
 clean:
-	\rm -f servidor cliente
+	\rm -f servidor cliente prueba
 
 servidor: servidor.cpp
 	g++ servidor.cpp -o servidor
