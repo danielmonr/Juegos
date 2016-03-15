@@ -37,6 +37,8 @@ vector<int> clientes;
 /* ===  FUNCTION MAIN ===================================================================*/
 int main ( int argc, char *argv[] ){
 
+	int cont = 0;
+
 	if (argc < 2){
 		cout << "Error porfavor ingrese un dirección ip.\nAbortando...\n";
 		abort();
@@ -45,7 +47,6 @@ int main ( int argc, char *argv[] ){
 		cout << "Numero de argumentos no válidos.\nAbortando\n";
 	}
 
-	int cont = 0;
 
 	/*  Mensajes de entrada */
 	cout << "############## Bienvenido a POKER ITC. #############" << endl;
@@ -68,10 +69,18 @@ int main ( int argc, char *argv[] ){
 	listen(servidor, N);
 
 	socklen_t tam = sizeof(direccion);
+	
 	while(1){
 		clientes.push(accept(servidor, (struct sockaddr *) &direccion, &tamano));
 		cout << "Aceptando conexiones en "<< inet_ntoa(direccion.sin_addr) << ":" << ntohs(direccion.sin_port) << endl;
-		if(paid == 0) break;	
+		cont++;
+	}
+
+	// Jugar
+	
+	bool finalizado = false;
+	while (!finalizado){
+
 	}
 
 	// Cerrar todos los clientes y el servidor
