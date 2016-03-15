@@ -23,6 +23,7 @@
 #include    <sys/socket.h>
 #include    <netinet/in.h>
 #include    <arpa/inet.h>
+#include    <vector>
 
 #define TCP_PORT 8001
 // numero de conecciones posibles
@@ -31,6 +32,7 @@
 using namespace std;
 
 int servidor, cliente;
+vector<int> clientes;
 
 /* ===  FUNCTION MAIN ===================================================================*/
 int main ( int argc, char *argv[] ){
@@ -43,7 +45,6 @@ int main ( int argc, char *argv[] ){
 		cout << "Numero de argumentos no válidos.\nAbortando\n";
 	}
 
-	pid_t* pid = (pid_t) malloc (N * sizeof(pid_t));
 	int cont = 0;
 
 	/*  Mensajes de entrada */
@@ -68,19 +69,15 @@ int main ( int argc, char *argv[] ){
 
 	socklen_t tam = sizeof(direccion);
 	while(1){
-		cliente = accept(servidor, (struct sockaddr *) &direccion, &tamano);
+		clientes.push(accept(servidor, (struct sockaddr *) &direccion, &tamano));
 		cout << "Aceptando conexiones en "<< inet_ntoa(direccion.sin_addr) << ":" << ntohs(direccion.sin_port) << endl;
-		*(pid+(cont++)) = fork();
 		if(paid == 0) break;	
 	}
-	if(*(pid+cont) == 0){
-		close(servidor);
-		close(cliente);
-	}
-	else if(*(pid+cont)== 0){
 
+	// Cerrar todos los clientes y el servidor
+	for (auto item:clientes){
+		close(item);
 	}
-
-	free(pid);
+	close(servidor);
 	return EXIT_SUCCESS;
 }				/* ----------  end of function main  ---------- */
