@@ -34,9 +34,9 @@ Baraja::Baraja(){
 	}
 }
 
-std::vector<Carta> Baraja::revolver(){
-	std::srand(unsigned (time(0)));
-	std::random_shuffle (baraja.begin(), baraja.end() );
+void Baraja::revolver(){
+	auto engine = std::default_random_engine{};
+	std::shuffle(std::begin(baraja), std::end(baraja), engine);
 }
 
 std::ostream & operator << (std::ostream & os, Baraja & b){

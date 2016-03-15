@@ -24,13 +24,14 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <random>
 
 class Baraja{
 	private:
 		std::vector<Carta> baraja;
 	public:
 		Baraja();
-		std::vector<Carta> revolver();
+		void revolver();
 
 		friend std::ostream & operator <<(std::ostream&, Baraja & b);
 };

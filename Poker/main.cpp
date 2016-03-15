@@ -26,6 +26,6 @@
 int main ( int argc, char *argv[] ){
 	Baraja *b = new Baraja();
 	b->revolver();
-	//std::cout << *b;
+	std::cout << *b;
 	return EXIT_SUCCESS;
 }				/* ----------  end of function main  ---------- */
