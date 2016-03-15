@@ -33,6 +33,7 @@ class Jugador{
 		~Jugador();
 		int pagar(int);
 		int cobrar(int);
+		int recibirMano(Carta, Carta);
 		Carta* mano;
 
 }
