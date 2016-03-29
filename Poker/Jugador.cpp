@@ -19,7 +19,7 @@
 #include "Jugador.h"
 
 Jugador::Jugador(){
-	cout << "Jugador vacio\n";
+	std::cout << "Jugador vacio\n";
 }
 
 Jugador::Jugador(int n, int f){
@@ -62,5 +62,5 @@ int Jugador::getFileDescriptor(){
 }
 
 int Jugador::getNum(){
-	return num;
+	return numero;
 }

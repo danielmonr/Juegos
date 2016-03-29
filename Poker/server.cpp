@@ -23,7 +23,8 @@
 #include    <sys/socket.h>
 #include    <netinet/in.h>
 #include    <arpa/inet.h>
-#include    <vector>
+#include    <pthread.h>
+#include    <stdlib.h>
 #include    "Baraja.h"
 #include    "Jugador.h"
 
@@ -39,6 +40,7 @@ Jugador* mesa[N];
 
 
 void* manejar_jugador(void*);
+void levantarse(int);
 
 /* ===  FUNCTION MAIN ===================================================================*/
 int main ( int argc, char *argv[] ){
@@ -76,7 +78,7 @@ int main ( int argc, char *argv[] ){
 	socklen_t tam = sizeof(direccion);
 	
 	while(1){
-		cliente = accept(servidor, (struct sockaddr *) &cli_addr, &tamano);
+		cliente = accept(servidor, (struct sockaddr *) &cli_addr, &tam);
 
 		if((cli_count+1) == N){
 			cout << "Número maximo de conecciones alcanzada.\n" << "Rechazar: " << inet_ntoa(cli_addr.sin_addr) << endl;
@@ -99,10 +101,6 @@ int main ( int argc, char *argv[] ){
 		sleep(1);
 	}
 
-	// Cerrar todos los clientes y el servidor
-	for (auto item:clientes){
-		close(item);
-	}
 	close(servidor);
 	return EXIT_SUCCESS;
 }				/* ----------  end of function main  ---------- */
@@ -110,7 +108,7 @@ int main ( int argc, char *argv[] ){
 // Maneja las comunicaciones con el jugador
 void* manejar_jugador(void* arg){
 	Jugador* j = (Jugador*) arg;
-	close(j->fd);
+	close(j->getFileDescriptor());
 	levantarse(j->getNum());
 }
 
@@ -120,4 +118,9 @@ void Jugar(){
 	Baraja* baraja = new Baraja();
 	baraja->revolver();
 	
+}
+
+void levantarse(int n){
+	free(mesa[n-1]);
+	mesa[n-1] = nullptr;
 }

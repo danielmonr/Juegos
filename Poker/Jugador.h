@@ -38,6 +38,6 @@ class Jugador{
 		Carta* mano;
 		int getFileDescriptor();
 		int getNum();
-}
+};
 
 #endif

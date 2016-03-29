@@ -19,6 +19,8 @@
 #ifndef __Poker__Carta__
 #define __Poker__Carta__
 
+#pragma once
+
 #include <iostream>
 
 class Carta{
