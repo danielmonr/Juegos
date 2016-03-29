@@ -42,6 +42,8 @@ Jugador* mesa[N];
 void* manejar_jugador(void*);
 void levantarse(int);
 
+void send_message_all(char*);
+
 /* ===  FUNCTION MAIN ===================================================================*/
 int main ( int argc, char *argv[] ){
 	pthread_t con_mngr;
@@ -110,6 +112,15 @@ void* manejar_jugador(void* arg){
 	Jugador* j = (Jugador*) arg;
 	close(j->getFileDescriptor());
 	levantarse(j->getNum());
+}
+
+void send_message_all(char* s){
+	int i;
+	for(i = 0; i < N; ++i){
+		if(mesa[i]){
+			write(mesa[i]->getFileDescriptor(), s, strlen(s)); 
+		}
+	}
 }
 
 void Jugar(){
