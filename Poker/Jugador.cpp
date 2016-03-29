@@ -56,3 +56,11 @@ int Jugador::recibirMano(Carta u, Carta d){
 	else
 		return -1;
 }
+
+int Jugador::getFileDescriptor(){
+	return fd;
+}
+
+int Jugador::getNum(){
+	return num;
+}

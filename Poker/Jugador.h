@@ -26,9 +26,9 @@ class Jugador{
 	private:
 		int numero;
 		int dinero;
+		int fd;
 
 	public:
-		int fd;
 		Jugador();
 		Jugador(int, int);
 		~Jugador();
@@ -36,7 +36,8 @@ class Jugador{
 		int cobrar(int);
 		int recibirMano(Carta, Carta);
 		Carta* mano;
-
+		int getFileDescriptor();
+		int getNum();
 }
 
 #endif

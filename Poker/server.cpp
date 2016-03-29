@@ -38,6 +38,8 @@ static unsigned cli_count = 0;
 Jugador* mesa[N];
 
 
+void* manejar_jugador(void*);
+
 /* ===  FUNCTION MAIN ===================================================================*/
 int main ( int argc, char *argv[] ){
 	pthread_t con_mngr;
@@ -83,16 +85,18 @@ int main ( int argc, char *argv[] ){
 		}
 
 		cout << "Aceptando conexiones en "<< inet_ntoa(direccion.sin_addr) << ":" << ntohs(direccion.sin_port) << endl;
-
-
-		
-	}
-
-	// Jugar
-	
-	bool finalizado = false;
-	while (!finalizado){
-		Jugar();
+		int num = 0, i;
+		// Buscar el lugar en la mesa disponile
+		for(i = 0; i < N; +i){
+			if(!mesa[i]){
+				num = i;
+				break;
+			}
+		}
+		Jugador* j = new Jugador(num+1, cliente);
+		mesa[num] = j;
+		pthread_create(&con_mngr, NULL, &manejar_jugador, (void*)j);
+		sleep(1);
 	}
 
 	// Cerrar todos los clientes y el servidor
@@ -102,6 +106,13 @@ int main ( int argc, char *argv[] ){
 	close(servidor);
 	return EXIT_SUCCESS;
 }				/* ----------  end of function main  ---------- */
+
+// Maneja las comunicaciones con el jugador
+void* manejar_jugador(void* arg){
+	Jugador* j = (Jugador*) arg;
+	close(j->fd);
+	levantarse(j->getNum());
+}
 
 void Jugar(){
 	int pot = 0;
