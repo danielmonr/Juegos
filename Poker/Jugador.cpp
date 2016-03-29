@@ -22,8 +22,9 @@ Jugador::Jugador(){
 	cout << "Jugador vacio\n";
 }
 
-Jugador::Jugador(int n){
+Jugador::Jugador(int n, int f){
 	numero = n;
+	fd = f;
 	dinero = 5000;
 }
 

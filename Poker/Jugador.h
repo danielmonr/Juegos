@@ -28,8 +28,9 @@ class Jugador{
 		int dinero;
 
 	public:
+		int fd;
 		Jugador();
-		Jugador(int);
+		Jugador(int, int);
 		~Jugador();
 		int pagar(int);
 		int cobrar(int);

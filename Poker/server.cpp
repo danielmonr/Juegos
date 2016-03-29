@@ -24,20 +24,23 @@
 #include    <netinet/in.h>
 #include    <arpa/inet.h>
 #include    <vector>
+#include    "Baraja.h"
+#include    "Jugador.h"
 
 #define TCP_PORT 8001
-// numero de conecciones posibles
-#define N 5
+// numero de conecciones posibles, maximo de jugadores
+#define N 10
 
 using namespace std;
 
 int servidor, cliente;
-vector<int> clientes;
+static unsigned cli_count = 0;
+Jugador* mesa[N];
+
 
 /* ===  FUNCTION MAIN ===================================================================*/
 int main ( int argc, char *argv[] ){
-
-	int cont = 0;
+	pthread_t con_mngr;
 
 	if (argc < 2){
 		cout << "Error porfavor ingrese un dirección ip.\nAbortando...\n";
@@ -54,12 +57,12 @@ int main ( int argc, char *argv[] ){
 
 	/*  Inicio del servidor */
 	struct sockaddr_in direccion;
-	char buffer[1000];
+	struct sockaddr_in cli_addr;
 
 	//crear el servidor
 	servidor = socket(PF_INET, SOCK_STREAM, 0);
 
-	//establecer coneccion con el servidor
+	// Ligar socket con una direccion y puerto
 	direccion.sin_port = htons(TCP_PORT);
 	direccion.sin_family = AF_INET;
 	inet_aton(argv[1], &direccion.sin_addr);
@@ -71,16 +74,25 @@ int main ( int argc, char *argv[] ){
 	socklen_t tam = sizeof(direccion);
 	
 	while(1){
-		clientes.push(accept(servidor, (struct sockaddr *) &direccion, &tamano));
+		cliente = accept(servidor, (struct sockaddr *) &cli_addr, &tamano);
+
+		if((cli_count+1) == N){
+			cout << "Número maximo de conecciones alcanzada.\n" << "Rechazar: " << inet_ntoa(cli_addr.sin_addr) << endl;
+			close(cliente);
+			continue;
+		}
+
 		cout << "Aceptando conexiones en "<< inet_ntoa(direccion.sin_addr) << ":" << ntohs(direccion.sin_port) << endl;
-		cont++;
+
+
+		
 	}
 
 	// Jugar
 	
 	bool finalizado = false;
 	while (!finalizado){
-
+		Jugar();
 	}
 
 	// Cerrar todos los clientes y el servidor
@@ -90,3 +102,11 @@ int main ( int argc, char *argv[] ){
 	close(servidor);
 	return EXIT_SUCCESS;
 }				/* ----------  end of function main  ---------- */
+
+void Jugar(){
+	int pot = 0;
+	cout << "Nueva Mano" << endl;
+	Baraja* baraja = new Baraja();
+	baraja->revolver();
+	
+}
