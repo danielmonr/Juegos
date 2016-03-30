@@ -43,36 +43,36 @@ int Carta::getNumero(){
 }
 
 std::ostream & operator << (std::ostream & os, Carta & c){
-	os << " ____" << std::endl;
-	os << "|";
+	os << " \e[1;37m____" << std::endl;
+	os << "\e[1;37m|";
 	int n = c.getNumero();
 	if (n == 10){
-		os << "10   |" << std::endl;
+		os << "\e[1;37m10   |" << std::endl;
 	}
 	else if (n == 11){
-		os  << "J    |" << std::endl;
+		os  << "\e[1;37mJ    |" << std::endl;
 	}
 	else if(n == 12){
-		os << "Q    |" << std::endl;
+		os << "\e[1;37mQ    |" << std::endl;
 	}
 	else if(n == 13){
-		os << "K    |" << std::endl;
+		os << "\e[1;37mK    |" << std::endl;
 	}
 	else{
-		os << n <<"    |" << std::endl;
+		os << n <<"\e[1;37m    |" << std::endl;
 	}
 	switch (c.getColor()){
 		case 'd':
-			os << "|\xE2\x99\xA6    |";
+			os << "\e[1;37m|\e[1;31m\xE2\x99\xA6    \e[1;37m|";
 			break;
 		case 't':
-			os << "|\xE2\x99\xA3    |";
+			os << "\e[1;37m|\e[0;30m\xE2\x99\xA3    \e[1;37m|";
 			break;
 		case 's':
-			os << "|\xE2\x99\xA0    |";
+			os << "\e[1;37m|\e[0;30m\xE2\x99\xA0    \e[1;37m|";
 			break;
 		case 'c':
-			os << "|\xE2\x99\xA5    |";
+			os << "\e[1;37m|\e[1;31m\xE2\x99\xA5    \e[1;37m|";
 			break;
 	}
 	os << "\n \u203e\u203e\u203e\u203e\u203e" << std::endl;
