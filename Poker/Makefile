@@ -11,4 +11,4 @@ cliente: cliente.cpp
 	g++ cliente.cpp -o cliente
 
 prueba: main.cpp Baraja.cpp Carta.cpp Pantalla.cpp
-	g++ --std=c++11 -I. Pantalla.cpp main.cpp Baraja.cpp Carta.cpp -o prueba -lncurses
+	g++ --std=c++11 -I. main.cpp Baraja.cpp Carta.cpp Pantalla.cpp -o prueba -lncurses

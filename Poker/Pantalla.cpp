@@ -19,6 +19,7 @@
 #include "Pantalla.h"
 
 bool Pantalla::curses_ON = false;
+WINDOW* Pantalla::dispDialog = nullptr;
 
 void Pantalla::startCurses(){
         if(curses_ON)
@@ -31,7 +32,7 @@ void Pantalla::startCurses(){
                 keypad(stdscr, true);
                 atexit(endCurses);
                 curses_ON = true;
-                dispDialog = newwin(10,20,5,15);
+				dispDialog = newwin(10,20,5,15);
                 refresh();
                 box(dispDialog, 0,0);
                 printw("Main Window");
@@ -49,5 +50,17 @@ void Pantalla::endCurses(){
 }
 
 void Pantalla::print(std::string s){
+
+}
+
+void Pantalla::dialog(std::string s){
+
+}
+
+void Pantalla::chat(){
+
+}
+
+void Pantalla::printGame(){
 
 }

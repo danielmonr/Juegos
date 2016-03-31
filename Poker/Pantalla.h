@@ -26,6 +26,7 @@
 class Pantalla{
 	private:
 		static WINDOW* dispDialog;
+		static WINDOW* playerInfo;
 	public:
 		static bool curses_ON;
 		static void startCurses();

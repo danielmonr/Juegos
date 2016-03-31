@@ -28,12 +28,12 @@
 int main ( int argc, char *argv[] ){
 	Baraja *b = new Baraja();
 	b->revolver();
-	//Pantalla::startCurses();
-	//Pantalla::curses_ON = false;
+	Pantalla::startCurses();
+	Pantalla::curses_ON = false;
 	
+	sleep(3);
 
-
-	//Pantalla::endCurses();
+	Pantalla::endCurses();
 	
 
 	/*initscr();
