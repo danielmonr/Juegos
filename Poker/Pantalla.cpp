@@ -22,6 +22,7 @@ bool Pantalla::curses_ON = false;
 WINDOW* Pantalla::dispDialog = nullptr;
 WINDOW* Pantalla::playerInfo = nullptr;
 WINDOW* Pantalla::playerMoney = nullptr;
+WINDOW* Pantalla::pot = nullptr;
 char* Pantalla::buff = (char*) malloc (BUFF_SIZE);
 
 void Pantalla::startCurses(int n){

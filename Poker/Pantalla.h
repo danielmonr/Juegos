@@ -37,6 +37,9 @@ class Pantalla{
 		static WINDOW* playerInfo;
 		static WINDOW* dispDialog;
 		static WINDOW* playerMoney;
+		static WINDOW* pot;
+		static WINDOW* mesa;
+		static WINDOW* mano;
 		static char* buff;
 	public:
 		static bool curses_ON;
