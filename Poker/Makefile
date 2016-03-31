@@ -10,5 +10,5 @@ servidor: server.cpp Baraja.cpp Jugador.cpp Carta.cpp
 cliente: cliente.cpp
 	g++ cliente.cpp -o cliente
 
-prueba: main.cpp Baraja.cpp Carta.cpp
-	g++ --std=c++11 main.cpp Baraja.cpp Carta.cpp -o prueba
+prueba: main.cpp Baraja.cpp Carta.cpp Pantalla.cpp
+	g++ --std=c++11 -I. Pantalla.cpp main.cpp Baraja.cpp Carta.cpp -o prueba -lncurses

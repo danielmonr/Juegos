@@ -44,6 +44,9 @@ void* manejar_jugador(void*);
 void levantarse(int);
 
 void send_message_all(char*);
+void send_number_all(int);
+
+static pthread_barrier_t barrera;
 
 /* ===  FUNCTION MAIN ===================================================================*/
 int main ( int argc, char *argv[] ){
@@ -79,6 +82,7 @@ int main ( int argc, char *argv[] ){
 	listen(servidor, N);
 
 	socklen_t tam = sizeof(direccion);
+	pthread_barrier_init(&barrera, NULL, N);
 	
 	while(1){
 		cliente = accept(servidor, (struct sockaddr *) &cli_addr, &tam);
@@ -111,6 +115,8 @@ int main ( int argc, char *argv[] ){
 // Maneja las comunicaciones con el jugador
 void* manejar_jugador(void* arg){
 	Jugador* j = (Jugador*) arg;
+
+
 	close(j->getFileDescriptor());
 	levantarse(j->getNum());
 }
@@ -124,12 +130,19 @@ void send_message_all(char* s){
 	}
 }
 
+void send_number_all(int n){
+	int i;
+	for (i = 0; i < N;++i){
+		if(mesa[i])
+			write(mesa[i]->getFileDescriptor(), &n, sizeof(int));
+	}
+}
+
 void Jugar(){
 	int pot = 0;
 	cout << "Nueva Mano" << endl;
 	Baraja* baraja = new Baraja();
-	baraja->revolver();
-	
+	baraja->revolver();	
 }
 
 void levantarse(int n){

@@ -17,11 +17,14 @@
  */
 
 #include <iostream>
+#include <curses.h>
 
 
 using namespace std;
 
 #define TCP_PORT 8001
+
+bool curses_ON = false;
 
 /* ===  FUNCTION MAIN ===================================================================*/
 int main ( int argc, char *argv[] ){
@@ -49,3 +52,37 @@ int main ( int argc, char *argv[] ){
 
 	return EXIT_SUCCESS;
 }				/* ----------  end of function main  ---------- */
+
+void Pantalla(){
+	startCurses();
+}
+
+void imprimirInfo(){
+	int row, col;
+	row = col = 0;
+	move(row, col);
+
+}
+
+void startCurses(){
+	if(curses_ON){
+		refresh();
+	}
+	else{
+		initscr();
+		cbreak();
+		noecho();
+		intrflush(stdscr, false);
+		keypad(std, true);
+		atexit(endCurses);
+		curses_ON = true;
+	}
+}
+
+void endCurses(){
+	if(curses_ON && !isendwin()){
+		curses_ON = false;
+		clear();
+		endwin();
+	}
+}
