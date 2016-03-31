@@ -29,7 +29,7 @@ class Pantalla{
 		static WINDOW* playerInfo;
 	public:
 		static bool curses_ON;
-		static void startCurses();
+		static void startCurses(int);
 		static void endCurses();
 
 		static void print(std::string s);

@@ -20,8 +20,10 @@
 
 bool Pantalla::curses_ON = false;
 WINDOW* Pantalla::dispDialog = nullptr;
+WINDOW* Pantalla::playerInfo = nullptr;
 
-void Pantalla::startCurses(){
+void Pantalla::startCurses(int n){
+	int x, y;
         if(curses_ON)
                 refresh();
         else{
@@ -32,13 +34,18 @@ void Pantalla::startCurses(){
                 keypad(stdscr, true);
                 atexit(endCurses);
                 curses_ON = true;
-				dispDialog = newwin(10,20,5,15);
+				getmaxyx(stdscr, y, x);
+				playerInfo = newwin(1, 10, 0,0);
+				dispDialog = newwin(3,x,y-3, 0);
                 refresh();
                 box(dispDialog, 0,0);
+				move(1,0);
                 printw("Main Window");
-                mvwprintw(dispDialog, 1, 1, "subwindow");
+                mvwprintw(dispDialog, 0, 0, "Alertas");
+				mvwprintw(playerInfo, 0,0, "Jugador %d", n);
                 refresh();
                 wrefresh(dispDialog);
+				wrefresh(playerInfo);
         }
 }
 
@@ -46,6 +53,7 @@ void Pantalla::endCurses(){
         if(curses_ON && !isendwin())
                 clear();
         delwin(dispDialog);
+		delwin(playerInfo);
         endwin();
 }
 

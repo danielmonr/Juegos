@@ -28,7 +28,7 @@
 int main ( int argc, char *argv[] ){
 	Baraja *b = new Baraja();
 	b->revolver();
-	Pantalla::startCurses();
+	Pantalla::startCurses(2);
 	Pantalla::curses_ON = false;
 	
 	sleep(3);
