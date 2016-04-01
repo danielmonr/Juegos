@@ -23,20 +23,22 @@
 #include    <stdio.h>
 #include    "Baraja.h"
 #include    "Pantalla.h"
+#include    "Jugador.h"
 
 #define SIZE_BUFFER 256
 
-char* buffer;
-char* escribir();
+//char* escribir();
 
 /* ===  FUNCTION MAIN ===================================================================*/
 int main ( int argc, char *argv[] ){
 	Baraja *b = new Baraja();
 	b->revolver();
+	Jugador* j = new Jugador(1, 300);
 	Pantalla::startCurses(2);
 	//Pantalla::print("hola");
-	escribir();
-
+	Pantalla::printInfo(j);
+	
+	Pantalla::escribirDialog();
 	Pantalla::endCurses();
 	
 
@@ -52,12 +54,10 @@ int main ( int argc, char *argv[] ){
 	delwin(sb);
 	endwin(); */
 
-	buffer = (char*) malloc (SIZE_BUFFER);
-	escribir();
-	free(buffer);
 	return EXIT_SUCCESS;
 }				/* ----------  end of function main  ---------- */
 
+/*
 char* escribir(){
 	bool activo = true;
 	int cont = 0;
@@ -75,4 +75,4 @@ char* escribir(){
 				break;
 		}
 	}
-}
+}*/

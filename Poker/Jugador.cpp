@@ -64,3 +64,7 @@ int Jugador::getFileDescriptor(){
 int Jugador::getNum(){
 	return numero;
 }
+
+int Jugador::getDinero(){
+	return dinero;
+}

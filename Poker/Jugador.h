@@ -19,6 +19,8 @@
 #ifndef __Poker__Jugador__
 #define __Poker__jugador__
 
+#pragma once
+
 #include "Carta.h"
 #include <iostream>
 
@@ -38,6 +40,7 @@ class Jugador{
 		Carta* mano;
 		int getFileDescriptor();
 		int getNum();
+		int getDinero();
 };
 
 #endif

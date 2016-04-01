@@ -22,12 +22,23 @@
 
 #include <iostream>
 #include <curses.h>
+#include "Jugador.h"
+
+#define ESC 27
+#define UP 259
+#define DOWN 258
+#define LEFT 260
+#define RIGHT 261
+#define BACKSPACE 127
+#define BUFF_SIZE 256
 
 class Pantalla{
 	private:
 		static WINDOW* playerInfo;
-	public:
 		static WINDOW* dispDialog;
+		static WINDOW* playerMoney;
+		static char* buff;
+	public:
 		static bool curses_ON;
 		static void startCurses(int);
 		static void endCurses();
@@ -36,6 +47,9 @@ class Pantalla{
 		static void dialog(char*);
 		static void chat();
 		static void printGame();
+		static void printInfo(Jugador*);
+
+		static char* escribirDialog();
 };
 
 #endif
