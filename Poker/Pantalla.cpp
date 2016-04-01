@@ -46,6 +46,8 @@ void Pantalla::startCurses(int n){
                 refresh();
                 wrefresh(dispDialog);
 				wrefresh(playerInfo);
+				wmove(dispDialog, 1,1);
+				wrefresh(dispDialog);
         }
 }
 
@@ -57,12 +59,17 @@ void Pantalla::endCurses(){
         endwin();
 }
 
-void Pantalla::print(std::string s){
-
+void Pantalla::print(char* s){
+	wmove(stdscr, 1,0);
+	refresh();
+	wprintw(stdscr,s);
+	refresh();
 }
 
-void Pantalla::dialog(std::string s){
-
+void Pantalla::dialog(char* s){
+	wmove(dispDialog, 1, 1);
+	wprintw(dispDialog, s);
+	wrefresh(dispDialog);
 }
 
 void Pantalla::chat(){

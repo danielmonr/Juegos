@@ -24,14 +24,18 @@
 #include    "Baraja.h"
 #include    "Pantalla.h"
 
+#define SIZE_BUFFER 256
+
+char* buffer;
+char* escribir();
+
 /* ===  FUNCTION MAIN ===================================================================*/
 int main ( int argc, char *argv[] ){
 	Baraja *b = new Baraja();
 	b->revolver();
 	Pantalla::startCurses(2);
-	Pantalla::curses_ON = false;
-	
-	sleep(3);
+	//Pantalla::print("hola");
+	escribir();
 
 	Pantalla::endCurses();
 	
@@ -47,5 +51,28 @@ int main ( int argc, char *argv[] ){
 	getch();
 	delwin(sb);
 	endwin(); */
+
+	buffer = (char*) malloc (SIZE_BUFFER);
+	escribir();
+	free(buffer);
 	return EXIT_SUCCESS;
 }				/* ----------  end of function main  ---------- */
+
+char* escribir(){
+	bool activo = true;
+	int cont = 0;
+	while (activo && cont < SIZE_BUFFER){
+		int ch = wgetch(Pantalla::dispDialog);
+		switch(ch){
+			case 27:
+				activo = false;
+				break;
+			case '\n':
+				return buffer;
+				break;
+			default:
+				waddch(Pantalla::dispDialog, ch);
+				break;
+		}
+	}
+}

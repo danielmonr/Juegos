@@ -25,15 +25,15 @@
 
 class Pantalla{
 	private:
-		static WINDOW* dispDialog;
 		static WINDOW* playerInfo;
 	public:
+		static WINDOW* dispDialog;
 		static bool curses_ON;
 		static void startCurses(int);
 		static void endCurses();
 
-		static void print(std::string s);
-		static void dialog(std::string s);
+		static void print(char *);
+		static void dialog(char*);
 		static void chat();
 		static void printGame();
 };
