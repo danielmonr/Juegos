@@ -23,6 +23,7 @@
 #include <iostream>
 #include <curses.h>
 #include "Jugador.h"
+#include "Carta.h"
 
 #define ESC 27
 #define UP 259

@@ -1,6 +1,7 @@
 ALL: servidor
 .PHONY=clean prueba
 
+
 clean:
 	\rm -f servidor cliente prueba
 
