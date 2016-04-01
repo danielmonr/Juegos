@@ -104,7 +104,7 @@ void Pantalla::chat(){
 
 }
 
-void Pantalla::printGame(Carta* mesa, int pot_m){
+void Pantalla::printGame(Carta* m, int pot_m){
 	int x, y, size_pot;
 	size_pot = 0;
 	int temp = pot_m;
