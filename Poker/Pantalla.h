@@ -50,7 +50,7 @@ class Pantalla{
 		static void print(char *);
 		static void dialog(char*);
 		static void chat();
-		static void printGame();
+		static void printGame(Carta*, itn);
 		static void printInfo(Jugador*);
 
 		static char* escribirDialog();
