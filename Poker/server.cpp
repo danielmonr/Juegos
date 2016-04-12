@@ -39,9 +39,11 @@ using namespace std;
 // Variables Globales
 int servidor, cliente;
 int num_jugadores, d_inicial;
-int repartir, turno, grande;
+int j_repartir, turno, grande;
 Jugador** mesa;
 vector<Carta*> c_mesa;
+char buff_in[BUFF_SIZE];
+int bin_size;
 
 // Funciones el juego
 void Jugar();
@@ -52,6 +54,7 @@ void Setup();
 void send_message_player(int, char*);
 void send_message_all(char*);
 void send_number_all(int);
+void receive_message_player(int);
 
 /* ===  FUNCTION MAIN ===================================================================*/
 int main ( int argc, char *argv[] ){
@@ -133,6 +136,7 @@ void Setup(){
 		sprintf(buffer, "/s/%d/%d", mesa[i]->getNum(), mesa[i]->cobrar(d_inicial));
 		send_message_player(i, buffer);
 	}
+	j_repartir = 0;
 	cout << "Setup completo" << endl;
 	free(buffer);
 }
@@ -140,7 +144,7 @@ void Setup(){
 void Jugar(){
 	char* buffer = (char*) malloc (BUFF_SIZE* sizeof(char));
 	int pot = 0;
-	repartir = 0;
+	j_repartir = 0;
 	c_mesa.empty();
 	cout << "Nueva Mano" << endl;
 	Baraja* baraja = new Baraja();
@@ -151,11 +155,48 @@ void Jugar(){
 		sprintf(buffer, "/j%d/%c%d/%c%d", mesa[i]->getNum(), mesa[i]->getMano().first->getColor(), mesa[i]->getMano().first->getNumero(), mesa[i]->getMano().second->getColor(), mesa[i]->getMano().second->getNumero());
 		send_message_player(i, buffer);
 	}
-	
+
+	Ronda();
+	free(buffer);
 }
 
 void Ronda(){
+	char* buffer = (char*) malloc(BUFF_SIZE*sizeof(char));
+	int apuesta = d_inicial / 100;
+	int j_max;
+	int pot = 0;
+	int j_grande, j_chica, turno;
+	j_grande = j_repartir -2;
+	j_chica = j_repartir -1;
+	if(j_grande < 0)
+		j_grande = num_jugadores + j_grande;
+	if(j_chica < 0)
+		j_chica = num_jugadores + j_chica;
+	j_max = j_grande;
+	turno = j_grande - 1;
+	if (turno < 0)
+		turno = num_jugadores + turno;
 
+	bool jugando = true, ronda_apuestas;
+	sprintf(buffer, "/e");
+	send_message_all(buffer);
+
+	// Mensaje de posicion del dealer
+	sprintf(buffer, "/d%d", j_repartir+1);
+	send_message_all(buffer);
+	// Mensaje de la ciega grande
+	sprintf(buffer, "/g%d/%d", j_grande+1, apuesta);
+	send_message_all(buffer);
+	receive_message_player(j_grande);
+	while(buff_in[1] == 'e' && mesa[j_grande]->getDinero() >= apuesta){
+		send_message_player(j_grande, buffer);
+		receive_message_player(j_grande);
+	}
+	mesa[j_grande]->pagar(apuesta);
+	pot += apuesta;
+	sprintf(buffer, "/p%d", pot);
+
+	free(buffer);
 }
 
 void levantarse(int n){
@@ -187,3 +228,9 @@ void send_number_all(int n){
 	}
 }
 
+void receive_message_player(int p){
+	if(mesa[p]){
+		bin_size = read(mesa[p]->getFileDescriptor(), buff_in, sizeof(buff_in)-1);
+		buff_in[bin_size] = '\0';
+	}
+}
