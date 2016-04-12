@@ -106,6 +106,9 @@ char* escribir(){
 }*/
 
 int grande, chica, repartir, turno,  apuesta, pot, j_max, nuevo;
+int num_ronda = 0;
+int num_cartas = 0;
+int n
 const int cli_count = 5;
 int pots[cli_count];
 void jugar(){
@@ -163,6 +166,11 @@ void Ronda(){
 	cout << "Enviar mensaje de actualizacion de pot" << endl;
 	ronda_apuestas = true;
 	for (int rt = 0; rt < 3; rt++){
+		cout << "Enviar mensaje de cominezo de ronda /r" << num_ronda << endl;
+		if (num_ronda == 1){
+			cout << "destapar 3 cartas" << endl;
+		}
+		cout << "Enviar informacion ronda /a/num_ronda/pot/num_cartas/carta1/carta2/../cartan" << endl;
 		while(ronda_apuestas){
 			cout << "Enviar mensaje de turno de jugador " << turno << endl;
 			cout << "Esperar mensaje de opcion de jugador " << turno << endl;
@@ -196,8 +204,10 @@ void Ronda(){
 				turno = cli_count;
 			}
 			cout << "turno : " << turno << " j_max: " << j_max << endl;
-			if(turno == j_max)
+			if(turno == j_max){
 				ronda_apuestas = false;
+				num_ronda++;
+			}
 		}
 	}
 
