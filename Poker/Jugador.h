@@ -28,6 +28,7 @@ class Jugador{
 	private:
 		int numero;
 		int dinero;
+		int pot;
 		int fd;
 		std::pair<Carta*, Carta*> mano;
 
@@ -41,6 +42,8 @@ class Jugador{
 		int getFileDescriptor();
 		int getNum();
 		int getDinero();
+		int getPot();
+		void emptyPot();
 		std::pair<Carta*, Carta*> getMano();
 };
 

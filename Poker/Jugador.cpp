@@ -26,6 +26,7 @@ Jugador::Jugador(int n, int f){
 	numero = n;
 	fd = f;
 	dinero = 0;
+	pot = 0;
 }
 
 Jugador::~Jugador(){
@@ -34,6 +35,7 @@ Jugador::~Jugador(){
 int Jugador::pagar(int n){
 	if(n <= dinero){
 		dinero -= n;
+		pot += n;
 		return n;
 	}
 	else
@@ -61,6 +63,14 @@ int Jugador::getNum(){
 
 int Jugador::getDinero(){
 	return dinero;
+}
+
+int Jugador::getPot(){
+	return pot;
+}
+
+void Jugador::emptyPot(){
+	pot = 0;
 }
 
 std::pair<Carta*, Carta*> Jugador::getMano(){

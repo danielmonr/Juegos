@@ -41,6 +41,7 @@ int servidor, cliente;
 int num_jugadores, d_inicial;
 int repartir, turno, grande;
 Jugador** mesa;
+vector<Carta*> c_mesa;
 
 // Funciones el juego
 void Jugar();
@@ -137,12 +138,20 @@ void Setup(){
 }
 
 void Jugar(){
+	char* buffer = (char*) malloc (BUFF_SIZE* sizeof(char));
 	int pot = 0;
 	repartir = 0;
+	c_mesa.empty();
 	cout << "Nueva Mano" << endl;
 	Baraja* baraja = new Baraja();
 	baraja->revolver();
 	cout << "Repartir cartas..." << endl;
+	for(int i = 0; i < num_jugadores; ++i){
+		mesa[i]->recibirMano(baraja->getCarta(), baraja->getCarta());
+		sprintf(buffer, "/j%d/%c%d/%c%d", mesa[i]->getNum(), mesa[i]->getMano().first->getColor(), mesa[i]->getMano().first->getNumero(), mesa[i]->getMano().second->getColor(), mesa[i]->getMano().second->getNumero());
+		send_message_player(i, buffer);
+	}
+	
 }
 
 void Ronda(){
