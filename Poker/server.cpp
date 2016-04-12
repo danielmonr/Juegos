@@ -32,22 +32,25 @@
 #define TCP_PORT 8001
 // numero de conecciones posibles, maximo de jugadores
 #define N 10
+#define BUFF_SIZE 150
 
 using namespace std;
 
+// Variables Globales
 int servidor, cliente;
+int num_jugadores, d_inicial;
 int repartir, turno, grande;
-static unsigned cli_count = 0;
-Jugador* mesa[N];
+Jugador** mesa;
 
+// Funciones el juego
+void Jugar();
+void Ronda();
+void Setup();
 
-void* manejar_jugador(void*);
-void levantarse(int);
-
+// Funciones auxiliares
+void send_message_player(int, char*);
 void send_message_all(char*);
 void send_number_all(int);
-
-static pthread_barrier_t barrera;
 
 /* ===  FUNCTION MAIN ===================================================================*/
 int main ( int argc, char *argv[] ){
@@ -82,50 +85,85 @@ int main ( int argc, char *argv[] ){
 	// escuchar clientes
 	listen(servidor, N);
 
+	// Inicializar la barrera y la variable del tamano del socket
 	socklen_t tam = sizeof(direccion);
-	pthread_barrier_init(&barrera, NULL, N);
+	//pthread_barrier_init(&barrera, NULL, N);
+
+	// Preguntar cuantos clientes
+	cout << "Cuantos jugadores?" << endl;
+	cin >> num_jugadores;
+
+	// Preguntar el dinero inicial
+	cin >> d_inicial;
+
+	// Crear arreglo de jugadores
+	mesa = (Jugador**) malloc (num_jugadores * sizeof(Jugador*));
 	
-	while(1){
+	// Esperar num_jugadores para jugar
+	for (int i = 0; i < num_jugadores; ++i){
 		cliente = accept(servidor, (struct sockaddr *) &cli_addr, &tam);
 
-		if((cli_count+1) == N){
-			cout << "Número maximo de conecciones alcanzada.\n" << "Rechazar: " << inet_ntoa(cli_addr.sin_addr) << endl;
-			close(cliente);
-			continue;
-		}
-
 		cout << "Aceptando conexiones en "<< inet_ntoa(direccion.sin_addr) << ":" << ntohs(direccion.sin_port) << endl;
-		int num = 0, i;
-		// Buscar el lugar en la mesa disponile
-		for(i = 0; i < N; +i){
-			if(!mesa[i]){
-				num = i;
-				break;
-			}
-		}
-		cli_count++;
-		Jugador* j = new Jugador(num+1, cliente);
-		mesa[num] = j;
-		pthread_create(&con_mngr, NULL, &manejar_jugador, (void*)j);
-		sleep(1);
+		// Crear al jugador con su numero y su filedescriptor
+		Jugador* j = new Jugador(i+1, cliente);
+		// Añadir al jugador al arreglo
+		*(mesa+i) = j;
 	}
 
+
+
+	// Empezar el juego
+	Setup();
+	Jugar();
+
+
+	free(mesa);
 	close(servidor);
 	return EXIT_SUCCESS;
 }				/* ----------  end of function main  ---------- */
 
-// Maneja las comunicaciones con el jugador
-void* manejar_jugador(void* arg){
-	Jugador* j = (Jugador*) arg;
+/*  ====================================== Funciones del Juego =========================================== */
 
+void Setup(){
+	char* buffer = (char*) malloc (BUFF_SIZE * sizeof(char)); // Crear buffer para la funcion
+	cout << "Iniciando juego..." << endl;
+	cout << "Enviando informacion a jugadores (numero, dinero inicial)." << endl;
+	for (int i = 0; i < num_jugadores; ++i){ // Loop para asignar dinero inicial a jugadores y enviar informacion de numero y dinero inicial a cada jugador
+		sprintf(buffer, "/s/%d/%d", mesa[i]->getNum(), mesa[i]->cobrar(d_inicial));
+		send_message_player(i, buffer);
+	}
+	cout << "Setup completo" << endl;
+	free(buffer);
+}
 
-	close(j->getFileDescriptor());
-	levantarse(j->getNum());
+void Jugar(){
+	int pot = 0;
+	repartir = 0;
+	cout << "Nueva Mano" << endl;
+	Baraja* baraja = new Baraja();
+	baraja->revolver();
+	cout << "Repartir cartas..." << endl;
+}
+
+void Ronda(){
+
+}
+
+void levantarse(int n){
+	free(mesa[n-1]);
+	mesa[n-1] = nullptr;
+}
+
+// ================================================ Funciones auxiliares ==================================
+
+void send_message_player(int p, char* s){
+	if (mesa[p]){
+		write(mesa[p]->getFileDescriptor(), s, strlen(s));
+	}
 }
 
 void send_message_all(char* s){
-	int i;
-	for(i = 0; i < N; ++i){
+	for(int i = 0; i < num_jugadores; ++i){
 		if(mesa[i]){
 			write(mesa[i]->getFileDescriptor(), s, strlen(s)); 
 		}
@@ -134,35 +172,9 @@ void send_message_all(char* s){
 
 void send_number_all(int n){
 	int i;
-	for (i = 0; i < N;++i){
+	for (i = 0; i < num_jugadores;++i){
 		if(mesa[i])
 			write(mesa[i]->getFileDescriptor(), &n, sizeof(int));
 	}
 }
 
-void Jugar(){
-	int pot = 0;
-	repartir = 0;
-	cout << "Nueva Mano" << endl;
-	Baraja* baraja = new Baraja();
-	baraja->revolver();	
-
-}
-
-void Ronda(){
-	char buff[150];
-	send_message_all("/e");
-	grande = repartir - 2;
-	if(grande < 0){
-		grande = cli_count + grande;
-	}
-	sprintf(buff, "/g%d", grande);
-	send_message_all(buff);
-	sprintf(buff, "/t%d", turno);
-	send_message_all(buff);
-}
-
-void levantarse(int n){
-	free(mesa[n-1]);
-	mesa[n-1] = nullptr;
-}

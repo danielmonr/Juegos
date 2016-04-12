@@ -39,6 +39,12 @@ void Baraja::revolver(){
 	std::shuffle(std::begin(baraja), std::end(baraja), engine);
 }
 
+Carta Baraja::getCarta(){
+	Carta temp = baraja.back();
+	baraja.pop_back();
+	return temp;
+}
+
 std::ostream & operator << (std::ostream & os, Baraja & b){
 	for (auto item:b.baraja){
 		os << item << " ";

@@ -32,6 +32,7 @@ class Baraja{
 	public:
 		Baraja();
 		void revolver();
+		Carta getCarta();
 
 		friend std::ostream & operator <<(std::ostream&, Baraja & b);
 };

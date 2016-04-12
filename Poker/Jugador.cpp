@@ -25,11 +25,10 @@ Jugador::Jugador(){
 Jugador::Jugador(int n, int f){
 	numero = n;
 	fd = f;
-	dinero = 5000;
+	dinero = 0;
 }
 
 Jugador::~Jugador(){
-	free(mano);
 }
 
 int Jugador::pagar(int n){
@@ -38,7 +37,7 @@ int Jugador::pagar(int n){
 		return n;
 	}
 	else
-		return 0;
+		return -1;
 }
 
 int Jugador::cobrar(int n){
@@ -47,14 +46,9 @@ int Jugador::cobrar(int n){
 }
 
 int Jugador::recibirMano(Carta u, Carta d){
-	if(mano != nullptr){
-		mano = (Carta*) malloc (2 * sizeof(Carta));
-		*mano = u;
-		*(mano+1) = d;
-		return 1;
-	}
-	else
-		return -1;
+	mano.first = u;
+	mano.second = d;
+	return 1;
 }
 
 int Jugador::getFileDescriptor(){
@@ -67,4 +61,8 @@ int Jugador::getNum(){
 
 int Jugador::getDinero(){
 	return dinero;
+}
+
+std::pair<Carta, Carta> Jugador::getMano(){
+	return mano;
 }

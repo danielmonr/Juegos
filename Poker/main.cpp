@@ -35,20 +35,18 @@ using namespace std;
 void jugar();
 void Ronda();
 
+const int cli_count = 5;
 /* ===  FUNCTION MAIN ===================================================================*/
 int main ( int argc, char *argv[] ){
-	/*  Baraja *b = new Baraja();
+	Baraja *b = new Baraja();
 	b->revolver();
 	Jugador* j = new Jugador(1, 300);
 	
-	Carta* c;
-	c = new Carta('d', 3);
-
 	vector<Carta*> v;
 	v.push_back(c);
 
 	//cout << c->getRepre()<< endl;
-	
+	/*
 	Pantalla::startCurses(2);
 	//Pantalla::print("hola");
 	Pantalla::printInfo(j);
@@ -69,15 +67,17 @@ int main ( int argc, char *argv[] ){
 	getch();
 	delwin(sb);
 	endwin(); */
+/*
 
-
-	/*char buff[120];
+	char buff[120];
 	sprintf(buff, "/t%d", 32);
 	printf("el buffer contiene: %s, de tamano: %d\n", buff, (int)strlen(buff));
+	sprintf(buff, "l");
+	printf("ahora contiene: %s, de tamano: %d\n", buff, (int)strlen(buff));
 */
 
 
-	jugar();
+	//jugar();
 
 	//free(b);
 	//free(j);
@@ -108,8 +108,6 @@ char* escribir(){
 int grande, chica, repartir, turno,  apuesta, pot, j_max, nuevo;
 int num_ronda = 0;
 int num_cartas = 0;
-int n
-const int cli_count = 5;
 int pots[cli_count];
 void jugar(){
 	cout << "Nueva mano" << endl;
