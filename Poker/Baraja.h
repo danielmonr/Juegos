@@ -25,14 +25,15 @@
 #include <vector>
 #include <algorithm>
 #include <random>
+#include "time.h"
 
 class Baraja{
 	private:
-		std::vector<Carta> baraja;
+		std::vector<Carta*> baraja;
 	public:
 		Baraja();
 		void revolver();
-		Carta getCarta();
+		Carta* getCarta();
 
 		friend std::ostream & operator <<(std::ostream&, Baraja & b);
 };

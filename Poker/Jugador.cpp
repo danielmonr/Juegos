@@ -45,7 +45,7 @@ int Jugador::cobrar(int n){
 	return dinero;
 }
 
-int Jugador::recibirMano(Carta u, Carta d){
+int Jugador::recibirMano(Carta* u, Carta* d){
 	mano.first = u;
 	mano.second = d;
 	return 1;
@@ -63,6 +63,6 @@ int Jugador::getDinero(){
 	return dinero;
 }
 
-std::pair<Carta, Carta> Jugador::getMano(){
+std::pair<Carta*, Carta*> Jugador::getMano(){
 	return mano;
 }

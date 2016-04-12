@@ -21,33 +21,37 @@
 
 Baraja::Baraja(){
 	for(int i = 1; i <= 13; ++i){
-		baraja.push_back(Carta('d', i));
+		Carta* t  = new Carta('d', i);
+		baraja.push_back(t);
 	}
 	for(int i = 1; i <= 13; ++i){
-		baraja.push_back(Carta('c', i));
+		Carta* t = new Carta('c', i);
+		baraja.push_back(t);
 	}
 	for(int i = 1; i <= 13; ++i){
-		baraja.push_back(Carta('s', i));
+		Carta* t = new Carta('s', i);
+		baraja.push_back(t);
 	}
 	for(int i = 1; i <= 13; ++i){
-		baraja.push_back(Carta('t', i));
+		Carta* t = new Carta('t', i);
+		baraja.push_back(t);
 	}
 }
 
 void Baraja::revolver(){
-	auto engine = std::default_random_engine{};
-	std::shuffle(std::begin(baraja), std::end(baraja), engine);
+	srand((unsigned)time(NULL));
+	std::random_shuffle(baraja.begin(), baraja.end());
 }
 
-Carta Baraja::getCarta(){
-	Carta temp = baraja.back();
+Carta* Baraja::getCarta(){
+	Carta* temp = baraja.back();
 	baraja.pop_back();
 	return temp;
 }
 
 std::ostream & operator << (std::ostream & os, Baraja & b){
 	for (auto item:b.baraja){
-		os << item << " ";
+		os << *item << " ";
 	}
 	return os;
 }

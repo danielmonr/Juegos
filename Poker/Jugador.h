@@ -29,7 +29,7 @@ class Jugador{
 		int numero;
 		int dinero;
 		int fd;
-		std::pair<Carta, Carta> mano;
+		std::pair<Carta*, Carta*> mano;
 
 	public:
 		Jugador();
@@ -37,11 +37,11 @@ class Jugador{
 		~Jugador();
 		int pagar(int);
 		int cobrar(int);
-		int recibirMano(Carta, Carta);	
+		int recibirMano(Carta*, Carta*);	
 		int getFileDescriptor();
 		int getNum();
 		int getDinero();
-		std::pair<Carta, Carta> getMano();
+		std::pair<Carta*, Carta*> getMano();
 };
 
 #endif

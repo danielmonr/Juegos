@@ -42,8 +42,14 @@ int main ( int argc, char *argv[] ){
 	b->revolver();
 	Jugador* j = new Jugador(1, 300);
 	
-	vector<Carta*> v;
-	v.push_back(c);
+
+	j->recibirMano(b->getCarta(), b->getCarta());
+
+	pair<Carta*, Carta*> temp = j->getMano();
+
+	cout << *(temp.first) << endl;
+	cout << *(temp.second) << endl;
+
 
 	//cout << c->getRepre()<< endl;
 	/*
