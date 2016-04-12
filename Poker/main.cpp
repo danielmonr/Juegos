@@ -169,8 +169,14 @@ void Ronda(){
 		cout << "Enviar mensaje de cominezo de ronda /r" << num_ronda << endl;
 		if (num_ronda == 1){
 			cout << "destapar 3 cartas" << endl;
+			num_cartas = 3;
+		}
+		else if(num_ronda == 2 || num_ronda == 3){
+			cout << "Destapar una carta" << endl;
+			num_cartas ++;
 		}
 		cout << "Enviar informacion ronda /a/num_ronda/pot/num_cartas/carta1/carta2/../cartan" << endl;
+		
 		while(ronda_apuestas){
 			cout << "Enviar mensaje de turno de jugador " << turno << endl;
 			cout << "Esperar mensaje de opcion de jugador " << turno << endl;

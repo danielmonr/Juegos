@@ -3,5 +3,8 @@
 /e : Empieza juego
 /g(num)/(cantidad) : Jugador con la ciega grande
 /c(num)/(cantidad) : Jugador con la ciega chica
+/a/num_ronda/num_cartas/carta/carta2/.../cartan : Mensaje de actualizacion de las cartas
+/pnum : mensaje de actualizacion del pot
 
 /E(error) : errores
+/A(alertas) : alertas
