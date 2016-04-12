@@ -36,6 +36,7 @@
 using namespace std;
 
 int servidor, cliente;
+int repartir, turno, grande;
 static unsigned cli_count = 0;
 Jugador* mesa[N];
 
@@ -102,6 +103,7 @@ int main ( int argc, char *argv[] ){
 				break;
 			}
 		}
+		cli_count++;
 		Jugador* j = new Jugador(num+1, cliente);
 		mesa[num] = j;
 		pthread_create(&con_mngr, NULL, &manejar_jugador, (void*)j);
@@ -140,9 +142,24 @@ void send_number_all(int n){
 
 void Jugar(){
 	int pot = 0;
+	repartir = 0;
 	cout << "Nueva Mano" << endl;
 	Baraja* baraja = new Baraja();
 	baraja->revolver();	
+
+}
+
+void Ronda(){
+	char buff[150];
+	send_message_all("/e");
+	grande = repartir - 2;
+	if(grande < 0){
+		grande = cli_count + grande;
+	}
+	sprintf(buff, "/g%d", grande);
+	send_message_all(buff);
+	sprintf(buff, "/t%d", turno);
+	send_message_all(buff);
 }
 
 void levantarse(int n){

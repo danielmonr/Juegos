@@ -4,7 +4,7 @@
  *       Filename:  Carta.cpp
  *
  *    Description:  
- *
+ "*
  *        Version:  1.0
  *        Created:  15/03/16 11:55:19
  *       Revision:  none
@@ -40,6 +40,41 @@ char Carta::getColor(){
 
 int Carta::getNumero(){
 	return numero;
+}
+
+std::string Carta::getRepre(){
+	std::string t = "";
+	switch (numero){
+		case 11:
+			t += "J";
+			break;
+		case 12:
+			t += "Q";
+			break;
+		case 13:
+			t += "K";
+			break;
+		default:
+			t += std::to_string(numero);
+			break;
+	}
+	t += "|";
+	switch(color){
+		case 'd':
+			//t+= "\xE2\x99\xA6";
+			t+= "\u2666";
+			break;
+		case 't':
+			t+= "\xE2\x99\xA3";
+			break;
+		case 's':
+			t+= "\xE2\x99\xA0";
+			break;
+		case 'c':
+			t+= "\xE2\x99\xA5";
+			break;
+	}
+	return t;
 }
 
 std::ostream & operator << (std::ostream & os, Carta & c){

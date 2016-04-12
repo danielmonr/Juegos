@@ -1,0 +1,6 @@
+/t(num) : Enviar turno a todos los jugadores, le toca a num;
+/e : Empieza juego
+/g(num)/(cantidad) : Jugador con la ciega grande
+/c(num)/(cantidad) : Jugador con la ciega chica
+
+/E(error) : errores

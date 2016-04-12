@@ -22,6 +22,7 @@
 #pragma once
 
 #include <iostream>
+#include <cstring>
 
 class Carta{
 	private:
@@ -32,6 +33,7 @@ class Carta{
 		Carta(char, int);
 		int getNumero();
 		char getColor();
+		std::string getRepre();
 
 		friend std::ostream & operator << (std::ostream & os, Carta & c);
 };

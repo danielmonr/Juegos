@@ -22,6 +22,8 @@
 
 #include <iostream>
 #include <curses.h>
+#include <vector>
+#include <locale.h>
 #include "Jugador.h"
 #include "Carta.h"
 
@@ -42,6 +44,7 @@ class Pantalla{
 		static WINDOW* mesa;
 		static WINDOW* mano;
 		static char* buff;
+		static void printCard(Carta*,WINDOW*, int, int);
 	public:
 		static bool curses_ON;
 		static void startCurses(int);
@@ -50,7 +53,7 @@ class Pantalla{
 		static void print(char *);
 		static void dialog(char*);
 		static void chat();
-		static void printGame(Carta*, int);
+		static void printGame(std::vector<Carta*>, int);
 		static void printInfo(Jugador*);
 
 		static char* escribirDialog();

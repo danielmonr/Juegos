@@ -32,6 +32,7 @@ void Pantalla::startCurses(int n){
         if(curses_ON)
                 refresh();
         else{
+				setlocale(LC_ALL, "en_US.utf-8");
                 initscr();
                 cbreak();
                 noecho();
@@ -54,6 +55,8 @@ void Pantalla::startCurses(int n){
 				box(mesa, 0,0);
 				move(1,0);
                 printw("Main Window");
+				const char clubs[] = {static_cast<char>(0xE2), static_cast<char>(0x99),static_cast<char>(0xA3), static_cast<char>(0)};
+				printw("%s", clubs);
                 mvwprintw(dispDialog, 0, 0, "Alertas");
 				mvwprintw(playerInfo, 0,0, "Jugador ");
 				mvwprintw(playerMoney, 0, 0, "$");
@@ -104,7 +107,7 @@ void Pantalla::chat(){
 
 }
 
-void Pantalla::printGame(Carta* m, int pot_m){
+void Pantalla::printGame(std::vector<Carta*> m, int pot_m){
 	int x, y, size_pot;
 	size_pot = 0;
 	int temp = pot_m;
@@ -116,6 +119,14 @@ void Pantalla::printGame(Carta* m, int pot_m){
 	getmaxyx(mesa,y,x);
 	wmove(mesa, 1,(x/2)-(size_pot/2));
 	wprintw(mesa, "pot = %d", pot_m);
+
+	int x_cont = 3;
+	for(auto item:m){
+		//mvwprintw(mesa, 2, x_cont, item->getRepre());
+		printCard(item, mesa, x_cont, 2);
+		x_cont += 6;
+	}
+
 	refresh();
 	wrefresh(mesa);
 }
@@ -149,4 +160,10 @@ char* Pantalla::escribirDialog(){
 				break;
 		}
 	}
+}
+
+void Pantalla::printCard(Carta* c, WINDOW* win, int x, int y){
+	//mvwprintw(win, y,x, "\u250c\u2500\u2500\u2500\u2500\u2510");
+	mvwaddstr(win, y, x , c->getRepre().c_str());
+	wrefresh(win);
 }
