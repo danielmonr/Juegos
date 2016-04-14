@@ -164,6 +164,7 @@ void Ronda(){
 	char* buffer = (char*) malloc(BUFF_SIZE*sizeof(char));
 	int apuesta = d_inicial / 100;
 	int j_max;
+	vector<Carta*> cartas_m;
 	int pot = 0;
 	int j_grande, j_chica, turno;
 	j_grande = j_repartir -2;
@@ -178,6 +179,7 @@ void Ronda(){
 		turno = num_jugadores + turno;
 
 	bool jugando = true, ronda_apuestas;
+	// Mensaje de comienzo
 	sprintf(buffer, "/e");
 	send_message_all(buffer);
 
@@ -187,14 +189,50 @@ void Ronda(){
 	// Mensaje de la ciega grande
 	sprintf(buffer, "/g%d/%d", j_grande+1, apuesta);
 	send_message_all(buffer);
+	// Esperar a que el jugador pague
 	receive_message_player(j_grande);
-	while(buff_in[1] == 'e' && mesa[j_grande]->getDinero() >= apuesta){
+	while(buff_in[1] == 'E' && mesa[j_grande]->getDinero() >= apuesta){
 		send_message_player(j_grande, buffer);
 		receive_message_player(j_grande);
 	}
+	// asignar el pago y actualizar el pot
 	mesa[j_grande]->pagar(apuesta);
 	pot += apuesta;
 	sprintf(buffer, "/p%d", pot);
+	send_message_all(buffer);
+
+	// Mensaje de ciega chica
+	sprintf(buffer, "/c%d/%d", j_chica+1, apuesta/2);
+	send_message_all(buffer);
+	receive_message_player(j_chica);
+	while(buff_in[1] == 'E' && mesa[j_chica]->getDinero() >= apuesta){
+		send_message_player(j_chica, buffer);
+		receive_message_player(j_chica);
+	}
+	mesa[j_chica]->pagar(apuesta/2);
+	pot += apuesta/2;
+	sprintf(buffer, "p/%d", pot);
+	send_message_all(buffer);
+	// Fin proceso ciega chica
+
+	ronda_apuestas = true;
+	for(int rt = 0; rt < 4; rt++){
+		// Enviar mensaje de comienzo de una ronda: /r(num ronda)
+		sprintf(buffer, "/r%d", rt);
+		send_message_all(buffer);
+		switch(rt){
+			case 0: // Ronda inicial de apuestas
+				break;
+			case 1: // Segunda ronda de apuestas
+				break;
+			case 2: // tercera ronda de apuestas, destapar una carta
+				break;
+			case 3: // curat ronda de apuestas, destapar cuna carta 
+				break;
+			default: 
+				break;
+		}
+	}
 
 	free(buffer);
 }
