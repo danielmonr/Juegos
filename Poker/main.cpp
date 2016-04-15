@@ -38,6 +38,7 @@ void Ronda();
 const int cli_count = 5;
 /* ===  FUNCTION MAIN ===================================================================*/
 int main ( int argc, char *argv[] ){
+	/*
 	Baraja *b = new Baraja();
 	b->revolver();
 	Jugador* j = new Jugador(1, 300);
@@ -48,7 +49,7 @@ int main ( int argc, char *argv[] ){
 	pair<Carta*, Carta*> temp = j->getMano();
 
 	cout << *(temp.first) << endl;
-	cout << *(temp.second) << endl;
+	cout << *(temp.second) << endl;*/
 
 
 	//cout << c->getRepre()<< endl;
@@ -73,15 +74,14 @@ int main ( int argc, char *argv[] ){
 	getch();
 	delwin(sb);
 	endwin(); */
-/*
 
-	char buff[120];
+
+	char* buff = (char*) malloc(120);
 	sprintf(buff, "/t%d", 32);
 	printf("el buffer contiene: %s, de tamano: %d\n", buff, (int)strlen(buff));
-	sprintf(buff, "l");
+	sprintf(buff+strlen(buff), "-l");
 	printf("ahora contiene: %s, de tamano: %d\n", buff, (int)strlen(buff));
-*/
-
+	free(buff);
 
 	//jugar();
 

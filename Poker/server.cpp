@@ -41,6 +41,7 @@ int servidor, cliente;
 int num_jugadores, d_inicial;
 int j_repartir, turno, grande;
 Jugador** mesa;
+Baraja* baraja;
 vector<Carta*> c_mesa;
 char buff_in[BUFF_SIZE];
 int bin_size;
@@ -135,7 +136,7 @@ int main ( int argc, char *argv[] ){
 	Setup();
 	Jugar();
 
-
+	free(baraja);
 	free(mesa);
 	free(rondas);
 	close(servidor);
@@ -163,7 +164,7 @@ void Jugar(){
 	j_repartir = 0;
 	c_mesa.empty();
 	cout << "Nueva Mano" << endl;
-	Baraja* baraja = new Baraja();
+	baraja = new Baraja();
 	baraja->revolver();
 	cout << "Repartir cartas..." << endl;
 	for(int i = 0; i < num_jugadores; ++i){
@@ -185,6 +186,7 @@ void Ronda(){
 	int current_bet = 0;
 	int newbet = 0;
 	int j_grande, j_chica, turno;
+	bool terminado = true;
 	j_grande = j_repartir -2;
 	j_chica = j_repartir -1;
 	if(j_grande < 0)
@@ -238,10 +240,13 @@ void Ronda(){
 		// Enviar mensaje de comienzo de una ronda: /r(num ronda)
 		sprintf(buffer, "/r%d", rt);
 		send_message_all(buffer);
+		terminado = true;
 		rondas[rt](turno, j_max, apuesta);
 		while(turno != j_max){
 			if(!mesa[turno]->getActivo())
 				continue;
+			else
+				terminado = false;
 			sprintf(buffer, "/t%d", turno+1);
 			receive_message_player(turno);
 			switch(buff_in[1]){
@@ -281,6 +286,11 @@ void Ronda(){
 			if(turno < 0)
 				turno = num_jugadores -1;
 		}
+		if(terminado){
+			printf("Se acabo el juego todos foldearon.\n");
+			sprintf("/w%d", j_max);
+			return;
+		}
 	}
 
 	free(buffer);
@@ -292,16 +302,51 @@ void levantarse(int n){
 }
 
 void r1(int turno, int j_max, int apuesta){
+	printf("Ronda de apuestas uno.\nTurno de %d, apuesta de: %d, jugador grande: %d\n", turno, apuesta, j_max);
 }
 
 void r2(int turno, int j_max, int apuesta){
+	printf("Ronda de apuestas dos.\nTurno de %d, apuesta de: %d, jugador grande: %d\n", turno, apuesta, j_max);
+	char* buffer = (char*) malloc (BUFF_SIZE);
+	// Destapar 3 cartas
+	int i;
+	Carta* c;
+	sprintf(buffer,"/a%d", 3);
+	for (i = 0; i < 3; ++i){
+		c = baraja->getCarta();
+		c_mesa.push_back(c);
+		sprintf(buffer+strlen(buffer), "/%c%d", c->getColor, c->getNumero());
+	}
+	send_message_all(buffer);
+	free(buffer);
 }
 
 void r3(int turno, int j_max, int apuesta){
+	printf("Ronda de apuestas tres.\nTurno de %d, apuesta de: %d, jugador grande: %d\n", turno, apuesta, j_max);
+	char* buffer = (cahr*) malloc (BUFF_SIZE);
+	Carta* c;
+	c = baraja->getCarta();
+	c_mesa.push_back(c);
+	sprintf(buffer, "/a%d", 4);
+	for (auto item:c_mesa){
+		sprintf(buffer+strlen(buffer), "/%c%d", item->getColor(), item->getNumero());
+	}
+	send_message_all(buffer);
+	free(buffer);
 }
 
 void r4(int turno, int j_max, int apuesta){
-
+	printf("Ronda de apuestas cuatro.\nTurno de %d, apuesta de: %d, jugador grande: %d\n", turno, apuesta, j_max);
+	char* buffer = (cahr*) malloc (BUFF_SIZE);
+	Carta* c;
+	c = baraja->getCarta();
+	c_mesa.push_back(c);
+	sprintf(buffer, "/a%d", 5);
+	for (auto item:c_mesa){
+		sprintf(buffer+strlen(buffer), "/%c%d", item->getColor(), item->getNumero());
+	}
+	send_message_all(buffer);
+	free(buffer);
 }
 
 
