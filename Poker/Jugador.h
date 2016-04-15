@@ -28,6 +28,7 @@ class Jugador{
 	private:
 		int numero;
 		int dinero;
+		bool activo;
 		int pot;
 		int fd;
 		std::pair<Carta*, Carta*> mano;
@@ -43,6 +44,9 @@ class Jugador{
 		int getNum();
 		int getDinero();
 		int getPot();
+		bool getActivo();
+		void desactivar();
+		void activar();
 		void emptyPot();
 		std::pair<Carta*, Carta*> getMano();
 };

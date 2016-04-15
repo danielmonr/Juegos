@@ -49,8 +49,15 @@ int bin_size;
 void Jugar();
 void Ronda();
 void Setup();
+typedef void (* rondas_t)(int, int, int);
+rondas_t *rondas;
+void r1(int, int, int);
+void r2(int, int, int);
+void r3(int, int, int);
+void r4(int, int, int);
 
 // Funciones auxiliares
+int transformToInt();
 void send_message_player(int, char*);
 void send_message_all(char*);
 void send_number_all(int);
@@ -72,6 +79,14 @@ int main ( int argc, char *argv[] ){
 	/*  Mensajes de entrada */
 	cout << "############## Bienvenido a POKER ITC. #############" << endl;
 	cout << "######### Desarrollado por: Daniel Monzalvo ########" << endl;
+
+
+	/*  Arreglo de funciones para las rondas */
+	rondas = (rondas_t*) malloc (4*  sizeof(rondas_t));
+	*rondas = r1;
+	*(rondas+1) = r2;
+	*(rondas+2) = r3;
+	*(rondas+3) = r4;
 
 	/*  Inicio del servidor */
 	struct sockaddr_in direccion;
@@ -122,6 +137,7 @@ int main ( int argc, char *argv[] ){
 
 
 	free(mesa);
+	free(rondas);
 	close(servidor);
 	return EXIT_SUCCESS;
 }				/* ----------  end of function main  ---------- */
@@ -166,6 +182,8 @@ void Ronda(){
 	int j_max;
 	vector<Carta*> cartas_m;
 	int pot = 0;
+	int current_bet = 0;
+	int newbet = 0;
 	int j_grande, j_chica, turno;
 	j_grande = j_repartir -2;
 	j_chica = j_repartir -1;
@@ -220,17 +238,48 @@ void Ronda(){
 		// Enviar mensaje de comienzo de una ronda: /r(num ronda)
 		sprintf(buffer, "/r%d", rt);
 		send_message_all(buffer);
-		switch(rt){
-			case 0: // Ronda inicial de apuestas
-				break;
-			case 1: // Segunda ronda de apuestas
-				break;
-			case 2: // tercera ronda de apuestas, destapar una carta
-				break;
-			case 3: // curat ronda de apuestas, destapar cuna carta 
-				break;
-			default: 
-				break;
+		rondas[rt](turno, j_max, apuesta);
+		while(turno != j_max){
+			if(!mesa[turno]->getActivo())
+				continue;
+			sprintf(buffer, "/t%d", turno+1);
+			receive_message_player(turno);
+			switch(buff_in[1]){
+				case 'E':
+					break;
+				case 'i':
+					current_bet = mesa[turno]->getPot();
+					mesa[turno]->pagar(apuesta-current_bet);
+					pot += apuesta-current_bet;
+					// Enviar respuesta de jugador a todos
+					sprintf(buffer, "/i%d", turno+1);
+					send_message_all(buffer);
+					// Enviar mensaje de actualizacion de pot a todos
+					sprintf(buffer, "/p%d", pot);
+					send_message_all(buffer);
+					break;
+				case 's':
+					current_bet = mesa[turno]->getPot();
+					newbet = transformToInt();
+					mesa[turno]->pagar(newbet-current_bet);
+					pot += apuesta-current_bet;
+					// Enviar respuesta de jugador a todos
+					sprintf(buffer,"/s%d/%d", turno, newbet);
+					send_message_all(buffer);
+					apuesta = newbet;
+					j_max = turno;
+					// Enviar mensaje de actualizacion de pot
+					sprintf(buffer, "/p%d", pot);
+					send_message_all(buffer);
+					break;
+				case 'f':
+					mesa[turno]->desactivar();
+					sprintf(buffer, "/f%d", turno+1);
+					break;
+			}
+			turno--;
+			if(turno < 0)
+				turno = num_jugadores -1;
 		}
 	}
 
@@ -242,7 +291,30 @@ void levantarse(int n){
 	mesa[n-1] = nullptr;
 }
 
+void r1(int turno, int j_max, int apuesta){
+}
+
+void r2(int turno, int j_max, int apuesta){
+}
+
+void r3(int turno, int j_max, int apuesta){
+}
+
+void r4(int turno, int j_max, int apuesta){
+
+}
+
+
 // ================================================ Funciones auxiliares ==================================
+
+int transformToInt(){
+	int i, temp = 0;
+	for (i = 2; i < strlen(buff_in); ++i){
+		temp *= 10;
+		temp += buff_in[i] -'0';
+	}
+	return temp;
+}
 
 void send_message_player(int p, char* s){
 	if (mesa[p]){

@@ -24,6 +24,7 @@ Jugador::Jugador(){
 
 Jugador::Jugador(int n, int f){
 	numero = n;
+	activo = true;
 	fd = f;
 	dinero = 0;
 	pot = 0;
@@ -71,6 +72,18 @@ int Jugador::getPot(){
 
 void Jugador::emptyPot(){
 	pot = 0;
+}
+
+bool Jugador::getActivo(){
+	return activo;
+}
+
+void Jugador::desactivar(){
+	activo = false;
+}
+
+void Jugador::activar(){
+	activo = true;
 }
 
 std::pair<Carta*, Carta*> Jugador::getMano(){
