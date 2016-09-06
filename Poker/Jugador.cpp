@@ -31,6 +31,7 @@ Jugador::Jugador(int n, int f){
 }
 
 Jugador::~Jugador(){
+	std::cout<<"Destruyendo jugador\n";
 }
 
 int Jugador::pagar(int n){
