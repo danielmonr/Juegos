@@ -28,10 +28,15 @@ Jugador::Jugador(int n, int f){
 	fd = f;
 	dinero = 0;
 	pot = 0;
+	pthread_create(&pth, NULL, recibirmsg, (void*)this);
+	//pthread_join(pth, NULL);
 }
 
 Jugador::~Jugador(){
 	std::cout<<"Destruyendo jugador\n";
+	pthread_cancel(pth);
+	pthread_join(pth, NULL);
+	std::cout << "Jugador destruido.\n";
 }
 
 int Jugador::pagar(int n){
@@ -89,4 +94,13 @@ void Jugador::activar(){
 
 std::pair<Carta*, Carta*> Jugador::getMano(){
 	return mano;
+}
+
+void* Jugador::recibirmsg(void* arg){
+	Jugador* jug = (Jugador*) arg;
+	int BUFF_SIZE = 255;
+	char buffer[BUFF_SIZE];
+	while(read(jug->getFileDescriptor(), buffer, BUFF_SIZE)){
+		std::cout << "J-" << jug->getNum() << ": " << buffer << std::endl;
+	}
 }

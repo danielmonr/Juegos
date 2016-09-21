@@ -18,6 +18,7 @@
 
 #include 	<iostream>
 #include    <unistd.h>
+#include    <signal.h>
 #include    <sys/socket.h>
 #include    <netinet/in.h>
 #include    <arpa/inet.h>
@@ -25,13 +26,14 @@
 #include    <stdlib.h>
 #include    <string.h>
 #include 	<curses.h>
-#include    <semaphore.h>
+#include    "semaphore.h"
+#include    <queue>
 
 using namespace std;
 
 pthread_mutex_t mutex;
 sem_t cambios;
-pthread_t lectura;
+pthread_t lectura, escritura;
 
 #define TCP_PORT 8002
 #define BUFF_SIZE 250
@@ -39,12 +41,16 @@ pthread_t lectura;
 bool curses_ON = false;
 
 int caracteres;
+queue<int>states;
 int state = 0;
+int cliente;
 
 // funciones para el manejo de comunicacion
 void* receiveMsg(void* args);
 void* sendMsg(void* args);
-int msgToSignal(char*);
+int msgToState(char*);
+int stateHandler();
+char* traducir(char* txt);
 
 void signalHandler(int s);
 
@@ -57,7 +63,6 @@ int main ( int argc, char *argv[] ){
 
 	char buffer[BUFF_SIZE];
 	struct sockaddr_in direccion;
-	int cliente;
 
 	cliente = socket(PF_INET, SOCK_STREAM, 0);
 
@@ -76,9 +81,16 @@ int main ( int argc, char *argv[] ){
 		//write(cliente, &buffer, esc);
 		//write(fileno(stdout), &buffer, caracteres);
 		//cout << "\n";
+		signal(SIGINT, signalHandler);
 		sem_init(&cambios, 0, 0);
 		pthread_create(&lectura, NULL, receiveMsg, (void*)&cliente);
 		pthread_create(&escritura, NULL, sendMsg, (void*)&cliente);
+
+		while(true){
+			sem_wait(&cambios);
+			pthread_mutex_lock(&mutex);
+
+		}
 
 		pthread_join(lectura,NULL);
 		pthread_join(escritura, NULL);
@@ -98,20 +110,34 @@ int main ( int argc, char *argv[] ){
 }				/* ----------  end of function main  ---------- */
 
 void* receiveMsg(void* args){
-	char buffer[BUFF_SIZE];
+	char* buffer = (char*) malloc (BUFF_SIZE);
 	int temp;
 	int _cliente = *((int*) args);
-	while(read(_cliente, &buffer, BUFF_SIZE)){
+	while(read(_cliente, buffer, BUFF_SIZE)){
 		string str(buffer);
-		temp = msgToSignal(&buffer);
+		temp = msgToState(buffer);
 		cout << "Recibido: " << str << " -> Senal: " << temp << endl;
 		pthread_mutex_lock(&mutex);
-		state = temp;
-		pthread_mutex_unlock(&mutex):
+		states.push(temp);
+		pthread_mutex_unlock(&mutex);
+		sem_post(&cambios);
 	}
 }
 
-int msgToSignal(char* msg){
+void* sendMsg(void* args){
+	int _cliente = *((int*) args);
+	char* buffer = (char*) malloc (BUFF_SIZE);	
+	while(read(fileno(stdin), buffer, sizeof(buffer))){
+		char* answer = traducir(buffer);
+		write(_cliente, answer, sizeof(answer));
+	}
+}
+
+char* traducir(char* txt){
+	return "first";
+}
+
+int msgToState(char* msg){
 	char temp = *msg;
 	switch(temp){
 		case 0:
@@ -124,7 +150,15 @@ int msgToSignal(char* msg){
 }
 
 void signalHandler(int s){
-	
+	cout << "Terminando juego...\n";
+	pthread_cancel(lectura);
+	pthread_cancel(escritura);
+	wait(lectura);
+	wait(escritura);
+	cout << "Cerrando coneccion...\n";
+	close(cliente);
+	signal(SIGINT, SIG_DFL);
+	raise(SIGINT);
 }
 
 /*

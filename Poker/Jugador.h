@@ -22,7 +22,9 @@
 #pragma once
 
 #include "Carta.h"
+#include <pthread.h>
 #include <iostream>
+#include <unistd.h>
 
 class Jugador{
 	private:
@@ -32,6 +34,7 @@ class Jugador{
 		int pot;
 		int fd;
 		std::pair<Carta*, Carta*> mano;
+		pthread_t pth;
 
 	public:
 		Jugador();
@@ -49,6 +52,7 @@ class Jugador{
 		void activar();
 		void emptyPot();
 		std::pair<Carta*, Carta*> getMano();
+		static void* recibirmsg(void*);
 };
 
 #endif
